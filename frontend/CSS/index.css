@@ -1,0 +1,64 @@
+/*frontend/css/style.css*/
+:root {
+    --primary-color: #042954;
+    --secondary-color: #faa11d;
+    --light-bg: #f8f9fa;
+    --text-color: #333;
+}
+
+/* Body Styling */
+body {
+    background: linear-gradient(rgba(4, 41, 84, 0.8), rgba(4, 41, 84, 0.8)), 
+                url('../img/logo.png') center/cover no-repeat;
+    color: var(--text-color);
+}
+
+/* Card Styling */
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    background: white;
+    width: 450px;
+}
+
+/* Form Inputs */
+.form-control {
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    transition: border 0.3s;
+}
+
+.form-control:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 5px rgba(250, 161, 29, 0.5);
+}
+
+/* Button Styling */
+.btn-primary {
+    background-color: var(--primary-color);
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Forgot Password Link */
+#forgotPassword {
+    font-size: 14px;
+    color: var(--primary-color);
+}
+
+#forgotPassword:hover {
+    text-decoration: underline;
+}
+
+/* Error Message */
+#errorMessage {
+    font-size: 14px;
+    display: none; /* Initially hidden */
+}

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | CESSTIG</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="css/admin-dashboard2.css">
+    <link rel="icon" type="image/png" href="img/logo.png">
+</head>
+<body>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <nav id="sidebar">
+        <div class="sidebar-header d-flex align-items-center">
+            <img src="img/logo.png" alt="Logo" class="logo-img">
+            <h4>CESSTIG</h4>
+        </div>
+        <ul class="list-unstyled components">
+            <li><a href="#" class="nav-link active" data-target="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="#" class="nav-link" data-target="#my-profile"><i class="fas fa-user"></i> My Profile</a></li>
+            <li><a href="#" class="nav-link" data-target="#manage-courses"><i class="fas fa-book"></i> Manage Courses</a></li>
+            <li><a href="#" class="nav-link" data-target="#manage-lecturers"><i class="fas fa-chalkboard-teacher"></i> Manage Lecturers</a></li>
+            <li><a href="#" class="nav-link" data-target="#manage-students"><i class="fas fa-user-graduate"></i> Manage Students</a></li>
+            <li><a href="#" class="nav-link" data-target="#manage-users"><i class="fas fa-users"></i> Manage Users</a></li>
+            <li><a href="#" class="nav-link" data-target="#view-reports"><i class="fas fa-chart-line"></i> View Reports</a></li>
+            <li><a href="#" class="nav-link" data-target="#manage-events"><i class="fas fa-calendar-alt"></i> Manage Events</a></li>
+            <li><a href="#" class="nav-link" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </nav>
+
+    <!-- Page Content -->
+    <div id="content">
+        <!-- Main Content Header -->
+        <div class="main-header d-flex justify-content-between align-items-center p-3">
+            <button type="button" id="sidebarCollapse" class="btn btn-primary d-lg-none">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h4 class="text-primary">Admin Dashboard</h4>
+            <div class="d-flex align-items-center gap-3">
+                <div class="notification position-relative">
+                    <i class="fas fa-bell fs-4"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge bg-danger text-white rounded-pill">0</span>
+                </div>
+                <div class="profile d-flex align-items-center">
+                    <img src="img/user.jpg" alt="Profile Picture" class="img-fluid rounded-circle" width="40" height="40">
+                    <span class="ms-2" id="user-name">Admin Name</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Content Area -->
+        <div class="container-fluid mt-4">
+            <div id="dashboard" class="content-section">
+                <h2>Dashboard</h2>
+                <div class="row">
+                    <div class="col-md-3 mb-4">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Students</h5>
+                                <p class="card-text" id="total-students">Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card bg-success text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Lecturers</h5>
+                                <p class="card-text" id="total-lecturers">Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card bg-info text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Courses</h5>
+                                <p class="card-text" id="total-courses">Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card bg-warning text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Upcoming Events</h5>
+                                <p class="card-text" id="upcoming-events">Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="my-profile" class="content-section d-none">
+                <h2>My Profile</h2>
+                <form id="profile-form">
+                    <!-- Profile form fields -->
+                </form>
+            </div>
+            <div id="manage-courses" class="content-section d-none">
+                <h2>Manage Courses</h2>
+                <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addCourseModal">
+                    <i class="fas fa-plus"></i> Add New Course
+                </button>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Course Name</th>
+                                <th>Department</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="courses-table-body">
+                            <!-- Course rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="manage-lecturers" class="content-section d-none">
+                <h2>Manage Lecturers</h2>
+                <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addLecturerModal">
+                    <i class="fas fa-plus"></i> Add New Lecturer
+                </button>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Department</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lecturers-table-body">
+                            <!-- Lecturer rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="manage-students" class="content-section d-none">
+                <h2>Manage Students</h2>
+                <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+                    <i class="fas fa-plus"></i> Add New Student
+                </button>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Student ID</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-table-body">
+                            <!-- Student rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="manage-users" class="content-section d-none">
+                <h2>Manage Users</h2>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <!-- User rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="view-reports" class="content-section d-none">
+                <h2>View Reports</h2>
+                <!-- Add report viewing functionality here -->
+            </div>
+            <div id="manage-events" class="content-section d-none">
+                <h2>Manage Events</h2>
+                <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addEventModal">
+                    <i class="fas fa-plus"></i> Add New Event
+                </button>
+                <div id="events-calendar"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Student Modal -->
+<div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+    <!-- Student form fields -->
+</div>
+
+<!-- Add Lecturer Modal -->
+<div class="modal fade" id="addLecturerModal" tabindex="-1" aria-labelledby="addLecturerModalLabel" aria-hidden="true">
+    <!-- Lecturer form fields -->
+</div>
+
+<!-- Add Course Modal -->
+<div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="addCourseModalLabel" aria-hidden="true">
+    <!-- Course form fields -->
+</div>
+
+<!-- Add Event Modal -->
+<div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
+    <!-- Event form fields -->
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js"></script>
+<script src="JS/admin-dashboard2.js"></script>
+</body>
+</html>
+

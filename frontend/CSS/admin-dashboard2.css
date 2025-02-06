@@ -1,0 +1,243 @@
+
+:root {
+    --primary-color: #042954;
+    --secondary-color: #faa11d;
+    --background-color: #f8f9fa;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+}
+
+.wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+   
+}
+
+#sidebar {
+    width: 250px;
+    background-color: var(--primary-color);
+    color: white;
+    min-height: 100vh;
+    height: auto;
+    transition: all 0.3s ease-in-out;
+}
+
+#sidebar .sidebar-header {
+    padding: 10px;
+    background: var(--secondary-color);
+    text-align: center;
+}
+
+#sidebar .logo-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+#sidebar ul.components {
+    padding: 0;
+    list-style: none;
+}
+
+#sidebar ul.components li {
+    padding: 10px;
+    font-size: 1rem;
+    display: block;
+}
+
+#sidebar ul.components li a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 10px;
+}
+
+#sidebar ul.components li a:hover,
+#sidebar ul.components li a.active {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+#content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: var(--background-color);
+    transition: margin-left 0.3s ease-in-out;
+}
+
+#content #sidebarCollapse {
+    margin-bottom: 20px;
+}
+.main-header {
+    background-color: #ffffff; /* White background for contrast */
+    border-bottom: 1px solid #d1d1d1; /* Subtle border */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+    position: sticky;
+    top: 0;
+    z-index: 999; /* Ensure it stays above other elements */
+}
+
+.main-header h4 {
+    margin: 0;
+    font-weight: bold;
+}
+
+.notification i {
+    color: var(--primary-color);
+    cursor: pointer;
+    position: relative;
+}
+
+.notification span {
+    font-size: 0.7rem;
+}
+
+.profile img {
+    border: 2px solid var(--secondary-color);
+}
+
+.profile span {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+#contentArea{
+    margin-top: 25px;
+    transition: all 0.3s; 
+    justify-content: center;  
+}
+.card {
+    margin-top: 20px;
+}
+
+.dashboard-header h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.date-time {
+    font-size: 1rem;
+    color: var(--secondary-color);
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+#recent-activities .list-group-item {
+    font-size: 0.95rem;
+    border: none;
+    padding: 10px 15px;
+}
+#my-profile {
+   
+    background-color: #f7f7f7; /* Light background */
+}
+
+#my-profile .container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+#my-profile .profile-header h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+#my-profile .profile-header p {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+.profile-picture img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 5px solid var(--secondary-color);
+}
+
+.profile-picture label {
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+#profile-form .form-control {
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#profile-form button {
+    border-radius: 5px;
+}
+/* #manage-courses {
+    background-color: #f7f7f7;
+    min-height: 100vh;
+    padding: 20px;
+} */
+
+#manage-courses h2, 
+#add-lecturers h2,
+#manage-students h2,
+#manage-users h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+#courses-table-body td {
+    vertical-align: middle;
+}
+
+.table thead th {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.table tbody td {
+    font-size: 0.9rem;
+}
+
+.pagination {
+    margin-top: 20px;
+}
+.modal-header{
+    background-color: var(--primary-color);
+    color: #ffffff;
+}
+.btn-close{
+    background-color: red;
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -250px;
+    }
+    #sidebar.active {
+        margin-left: 0;
+        margin-right: -500px;
+        z-index: 9999;
+        width: 100%;
+    }
+}
