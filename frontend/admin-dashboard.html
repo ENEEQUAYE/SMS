@@ -182,6 +182,8 @@
                                             <th>#</th>
                                             <th>Course Code</th>
                                             <th>Course Name</th>
+                                            <th>Description</th>
+                                            <th>Date Created</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -217,6 +219,10 @@
                                                 <label for="course-code" class="form-label">Course Code</label>
                                                 <input type="text" id="course-code" class="form-control" required>
                                             </div>
+                                            <div class="mb-3">
+                                                <label for="course-description" class="form-label">Course Description</label>
+                                                <textarea id="course-description" class="form-control" rows="3" required></textarea>
+                                            </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -248,6 +254,7 @@
                                 <thead class="table-primary">
                                     <tr>
                                         <th>#</th>
+                                        <th>Lecturer ID</th>
                                         <th>Lecturer Name</th>
                                         <th>Email Address</th>
                                         <th>Phone Number</th>
@@ -260,6 +267,7 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
                     
                         <!-- Add Lecturer Modal -->
                         <div class="modal fade" id="addLecturerModal" tabindex="-1" aria-labelledby="addLecturerModalLabel" aria-hidden="true">
@@ -305,6 +313,10 @@
                                                     <!-- Courses will be populated here -->
                                                 </select>
                                             </div>
+                                            <div class="mb-3">
+                                                <label for="lecturer-department" class="form-label">Department</label>
+                                                <input type="text" class="form-control" id="lecturer-department" required>
+                                            </div>
                                             <div class="d-flex justify-content-end">
                                                 <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
                                                 <button type="submit" class="btn btn-primary">Add Lecturer</button>
@@ -314,7 +326,37 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <script>
+                        document.getElementById("add-lecturer-form").addEventListener("submit", function (event) {
+                            event.preventDefault(); // Prevent form reload
+                        
+                            const firstName = document.getElementById("lecturer-first-name").value.trim();
+                            const lastName = document.getElementById("lecturer-last-name").value.trim();
+                            const email = document.getElementById("email").value.trim();
+                            const phone = document.getElementById("phone").value.trim();
+                            const password = document.getElementById("password").value.trim();
+                            const confirmPassword = document.getElementById("confirm-password").value.trim();
+                            const course = document.getElementById("course").value; // Selected course ID
+                            const department = document.getElementById("lecturer-department").value.trim
+
+
+                        
+                            if (password !== confirmPassword) {
+                                alert("Passwords do not match!");
+                                return;
+                            }
+                        
+                            const lecturerData = {
+                                firstName,
+                                lastName,
+                                email,
+                                password,
+                                contactNumber: phone,
+                                courses: [course], // Send course ID
+                                department,
+
+
+                    </script>
                     <!--------------------------------------------------------Add Students----------------------------------------------->
                     <div id="manage-students" class="content-section d-none">
                         <div class="container mt-4">
@@ -376,10 +418,6 @@
                                             <div class="mb-3">
                                                 <label for="student-name" class="form-label">Last Name</label>
                                                 <input type="text" id="student-last-name" class="form-control" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="student-id" class="form-label">Student ID</label>
-                                                <input type="text" id="student-id" class="form-control" required>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="course" class="form-label">Course Enrolled</label>
@@ -664,20 +702,20 @@
             <div class="modal-body">
                 <form id="lecturer-form">
                     <div class="mb-3">
-                        <label for="lecturer-email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="lecturer-email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="lecturer-password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="lecturer-password" required>
-                    </div>
-                    <div class="mb-3">
                         <label for="lecturer-first-name" class="form-label">First Name</label>
                         <input type="text" class="form-control" id="lecturer-first-name" required>
                     </div>
                     <div class="mb-3">
                         <label for="lecturer-last-name" class="form-label">Last Name</label>
                         <input type="text" class="form-control" id="lecturer-last-name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lecturer-email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="lecturer-email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lecturer-password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="lecturer-password" required>
                     </div>
                     <div class="mb-3">
                         <label for="lecturer-department" class="form-label">Department</label>

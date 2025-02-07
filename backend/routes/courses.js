@@ -1,3 +1,4 @@
+//backend/routes/courses.js
 const express = require("express");
 const Course = require("../models/Course");
 const router = express.Router();
@@ -5,7 +6,7 @@ const router = express.Router();
 // Add a new course
 router.post("/add", async (req, res) => {
     try {
-        const { name, code } = req.body;
+        const { name, code, description } = req.body;
 
         // Check if course already exists
         const existingCourse = await Course.findOne({ code });
@@ -13,7 +14,7 @@ router.post("/add", async (req, res) => {
             return res.status(400).json({ message: "Course code already exists" });
         }
 
-        const newCourse = new Course({ name, code });
+        const newCourse = new Course({ name, code, description });
         await newCourse.save();
         res.status(201).json({ message: "Course added successfully", course: newCourse });
     } catch (error) {
@@ -36,8 +37,8 @@ router.get("/", async (req, res) => {
 // Edit a course
 router.put("/edit/:id", async (req, res) => {
     try {
-        const { name, code } = req.body;
-        const course = await Course.findByIdAndUpdate(req.params.id, { name, code }, { new: true });
+        const { name, code, description } = req.body;
+        const course = await Course.findByIdAndUpdate(req.params.id, { name, code, description }, { new: true });
 
         if (!course) {
             return res.status(404).json({ message: "Course not found" });

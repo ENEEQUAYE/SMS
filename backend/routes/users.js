@@ -7,13 +7,16 @@ const router = express.Router();
 // Add Lecturer
 router.post("/add-lecturer", async (req, res) => {
     try {
-        const { firstName, lastName, email, password, contactNumber, courses } = req.body;
+        const { firstName, lastName, email, password, contactNumber, courses, department, qualifications, officeHours, specialization, bio } = req.body;
 
         // Check if email is already registered
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: "Email is already registered" });
         }
+
+        // Generate a unique lecturer ID
+        const lecturerId = `LECT-${Math.floor(1000 + Math.random() * 9000)}`;
 
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -27,6 +30,12 @@ router.post("/add-lecturer", async (req, res) => {
             contactNumber,
             courses,
             role: "Lecturer",
+            department,
+            lecturerId,
+            qualifications,
+            officeHours,
+            specialization,
+            bio,
         });
 
         await newLecturer.save();

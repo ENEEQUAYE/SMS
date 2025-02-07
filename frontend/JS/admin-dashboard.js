@@ -73,104 +73,7 @@ setProfile();
 });
 
 
-// Manage Courses Functionality
-// document.addEventListener("DOMContentLoaded", () => {
-//     const courseForm = document.getElementById("course-form");
-//     const courseNameInput = document.getElementById("course-name");
-//     const courseCodeInput = document.getElementById("course-code");
-//     const coursesTableBody = document.getElementById("courses-table-body");
-//     const searchInput = document.getElementById("search-courses");
-
-//     async function fetchCourses() {
-//         try {
-//             const response = await fetch("http://localhost:5000/api/courses");
-//             const courses = await response.json();
-//             displayCourses(courses);
-//         } catch (error) {
-//             console.error("Error fetching courses:", error);
-//         }
-//     }
-
-//     function displayCourses(courses) {
-//         coursesTableBody.innerHTML = "";
-//         courses.forEach((course, index) => {
-//             const row = `<tr>
-//                             <td>${index + 1}</td>
-//                             <td>${course.code}</td>
-//                             <td>${course.name}</td>
-//                             <td>
-//                                 <button class="btn btn-warning btn-sm" onclick="editCourse('${course._id}', '${course.name}', '${course.code}')">Edit</button>
-//                                 <button class="btn btn-danger btn-sm" onclick="deleteCourse('${course._id}')">Delete</button>
-//                             </td>
-//                         </tr>`;
-//             coursesTableBody.innerHTML += row;
-//         });
-//     }
-
-//     async function addCourse(e) {
-//         e.preventDefault();
-//         const course = {
-//             name: courseNameInput.value,
-//             code: courseCodeInput.value
-//         };
-
-//         try {
-//             await fetch("http://localhost:5000/api/courses", {
-//                 method: "POST",
-//                 headers: { "Content-Type": "application/json" },
-//                 body: JSON.stringify(course)
-//             });
-//             fetchCourses();
-//             courseForm.reset();
-//         } catch (error) {
-//             console.error("Error adding course:", error);
-//         }
-//     }
-
-//     async function deleteCourse(id) {
-//         try {
-//             await fetch(`http://localhost:5000/api/courses/${id}`, { method: "DELETE" });
-//             fetchCourses();
-//         } catch (error) {
-//             console.error("Error deleting course:", error);
-//         }
-//     }
-
-//     function editCourse(id, name, code) {
-//         courseNameInput.value = name;
-//         courseCodeInput.value = code;
-//         document.getElementById("addCourseModalLabel").textContent = "Edit Course";
-
-//         courseForm.onsubmit = async function (e) {
-//             e.preventDefault();
-//             try {
-//                 await fetch(`http://localhost:5000/api/courses/${id}`, {
-//                     method: "PUT",
-//                     headers: { "Content-Type": "application/json" },
-//                     body: JSON.stringify({ name: courseNameInput.value, code: courseCodeInput.value })
-//                 });
-//                 fetchCourses();
-//                 courseForm.reset();
-//                 document.getElementById("addCourseModalLabel").textContent = "Add New Course";
-//             } catch (error) {
-//                 console.error("Error updating course:", error);
-//             }
-//         };
-//     }
-
-//     searchInput.addEventListener("input", () => {
-//         const query = searchInput.value.toLowerCase();
-//         document.querySelectorAll("#courses-table-body tr").forEach(row => {
-//             const text = row.textContent.toLowerCase();
-//             row.style.display = text.includes(query) ? "" : "none";
-//         });
-//     });
-
-//     courseForm.addEventListener("submit", addCourse);
-//     fetchCourses();
-// });
-
-
+////////////////////////////////////////////////// Function to fetch and display courses////////////////////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", function () {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -181,6 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const courseForm = document.getElementById("course-form");
     const courseNameInput = document.getElementById("course-name");
     const courseCodeInput = document.getElementById("course-code");
+    const courseDescriptionTextArea = document.getElementById("course-description");
     const coursesTableBody = document.getElementById("courses-table-body");
     const searchInput = document.getElementById("search-courses");
 
@@ -204,6 +108,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td>${index + 1}</td>
                 <td>${course.code}</td>
                 <td>${course.name}</td>
+                <td>${course.description}</td>
+                <td>${new Date(course.createdAt).toLocaleDateString()}</td>
                 <td>
                     <button class="btn btn-warning btn-sm edit-course" data-id="${course._id}" data-name="${course.name}" data-code="${course.code}"><i class="fas fa-edit"></i>Edit</button>
                     <button class="btn btn-danger btn-sm delete-course" data-id="${course._id}"><i class="fas fa-trash"></i>Delete</button>
@@ -232,6 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const courseData = {
             name: courseNameInput.value,
             code: courseCodeInput.value,
+            description: courseDescriptionTextArea.value,
         };
 
         try {
@@ -255,9 +162,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Edit course (pre-fill the modal)
-    function editCourse(courseId, courseName, courseCode) {
+    function editCourse(courseId, courseName, courseCode, courseDescription) {
         courseNameInput.value = courseName;
         courseCodeInput.value = courseCode;
+        courseDescriptionTextArea.value = courseDescription || "";  // Set description if available
         $("#addCourseModal").modal("show");
 
         courseForm.onsubmit = async function (event) {
@@ -269,7 +177,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
-                    body: JSON.stringify({ name: courseNameInput.value, code: courseCodeInput.value }),
+                    body: JSON.stringify({ name: courseNameInput.value, code: courseCodeInput.value, description: courseDescriptionTextArea.value }),
                 });
 
                 if (!response.ok) throw new Error("Failed to update course");
@@ -314,198 +222,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchCourses(); // Initial fetch
 });
 
-/////////////////////////////////////////////Manage Lecturers Functionality/////////////////////////////////////////////
-// document.addEventListener("DOMContentLoaded", function () {
-//     const token = localStorage.getItem("token");
-//     if (!token) {
-//         window.location.href = "index.html"; // Redirect to login if not authenticated
-//         return;
-//     }
-
-//     const lecturerForm = document.getElementById("add-lecturer-form");
-//     const firstNameInput = document.getElementById("lecturer-first-name");
-//     const lastNameInput = document.getElementById("lecturer-last-name");
-//     const emailInput = document.getElementById("email");
-//     const phoneInput = document.getElementById("phone");
-//     const passwordInput = document.getElementById("password");
-//     const confirmPasswordInput = document.getElementById("confirm-password");
-//     const courseSelect = document.getElementById("course");
-//     const lecturersTableBody = document.getElementById("lecturers-table");
-//     const searchInput = document.getElementById("search-lecturers");
-
-//     // Fetch and display courses in dropdown
-//     async function fetchCourses() {
-//         try {
-//             const response = await fetch("http://localhost:5000/api/courses/", {
-//                 headers: { Authorization: `Bearer ${token}` },
-//             });
-//             const courses = await response.json();
-
-//             courseSelect.innerHTML = `<option value="" selected disabled>Select Course</option>`;
-//             courses.forEach(course => {
-//                 const option = document.createElement("option");
-//                 option.value = course._id;
-//                 option.textContent = course.name;
-//                 courseSelect.appendChild(option);
-//             });
-//         } catch (error) {
-//             console.error("Error fetching courses:", error);
-//         }
-//     }
-
-//     // Fetch and display lecturers
-//     async function fetchLecturers() {
-//         try {
-//             const response = await fetch("http://localhost:5000/api/lecturers/", {
-//                 headers: { Authorization: `Bearer ${token}` },
-//             });
-//             const lecturers = await response.json();
-//             displayLecturers(lecturers);
-//         } catch (error) {
-//             console.error("Error fetching lecturers:", error);
-//         }
-//     }
-
-//     function displayLecturers(lecturers) {
-//         lecturersTableBody.innerHTML = "";
-//         lecturers.forEach((lecturer, index) => {
-//             const row = `<tr>
-//                 <td>${index + 1}</td>
-//                 <td>${lecturer.firstName} ${lecturer.lastName}</td>
-//                 <td>${lecturer.email}</td>
-//                 <td>${lecturer.phone}</td>
-//                 <td>${lecturer.course ? lecturer.course.name : "Not Assigned"}</td>
-//                 <td>
-//                     <button class="btn btn-warning btn-sm edit-lecturer" data-id="${lecturer._id}" data-name="${lecturer.firstName}" data-email="${lecturer.email}" data-phone="${lecturer.phone}" data-course="${lecturer.course ? lecturer.course._id : ''}"><i class="fas fa-edit"></i></button>
-//                     <button class="btn btn-danger btn-sm delete-lecturer" data-id="${lecturer._id}"><i class="fas fa-trash"></i></button>
-//                 </td>
-//             </tr>`;
-//             lecturersTableBody.innerHTML += row;
-//         });
-
-//         // Attach event listeners for edit and delete buttons
-//         document.querySelectorAll(".edit-lecturer").forEach(button => {
-//             button.addEventListener("click", function () {
-//                 editLecturer(this.dataset.id, this.dataset.name, this.dataset.email, this.dataset.phone, this.dataset.course);
-//             });
-//         });
-
-//         document.querySelectorAll(".delete-lecturer").forEach(button => {
-//             button.addEventListener("click", function () {
-//                 deleteLecturer(this.dataset.id);
-//             });
-//         });
-//     }
-
-//     // Add a new lecturer
-//     lecturerForm.addEventListener("submit", async function (event) {
-//         event.preventDefault();
-
-//         if (passwordInput.value !== confirmPasswordInput.value) {
-//             alert("Passwords do not match!");
-//             return;
-//         }
-
-//         const lecturerData = {
-//             firstName: firstNameInput.value,
-//             lastName: lastNameInput.value,
-//             email: emailInput.value,
-//             phone: phoneInput.value,
-//             password: passwordInput.value,
-//             courseId: courseSelect.value
-//         };
-
-//         try {
-//             const response = await fetch("http://localhost:5000/api/lecturers/add", {
-//                 method: "POST",
-//                 headers: {
-//                     "Content-Type": "application/json",
-//                     Authorization: `Bearer ${token}`,
-//                 },
-//                 body: JSON.stringify(lecturerData),
-//             });
-
-//             if (!response.ok) throw new Error("Failed to add lecturer");
-
-//             $("#addLecturerModal").modal("hide");
-//             lecturerForm.reset();
-//             fetchLecturers(); // Refresh list
-//         } catch (error) {
-//             console.error("Error adding lecturer:", error);
-//         }
-//     });
-
-//     // Edit lecturer (pre-fill the modal)
-//     function editLecturer(lecturerId, firstName, email, phone, courseId) {
-//         firstNameInput.value = firstName;
-//         emailInput.value = email;
-//         phoneInput.value = phone;
-//         courseSelect.value = courseId;
-
-//         $("#addLecturerModal").modal("show");
-
-//         lecturerForm.onsubmit = async function (event) {
-//             event.preventDefault();
-//             try {
-//                 const response = await fetch(`http://localhost:5000/api/lecturers/edit/${lecturerId}`, {
-//                     method: "PUT",
-//                     headers: {
-//                         "Content-Type": "application/json",
-//                         Authorization: `Bearer ${token}`,
-//                     },
-//                     body: JSON.stringify({
-//                         firstName: firstNameInput.value,
-//                         email: emailInput.value,
-//                         phone: phoneInput.value,
-//                         courseId: courseSelect.value
-//                     }),
-//                 });
-
-//                 if (!response.ok) throw new Error("Failed to update lecturer");
-
-//                 $("#addLecturerModal").modal("hide");
-//                 lecturerForm.reset();
-//                 fetchLecturers();
-//             } catch (error) {
-//                 console.error("Error updating lecturer:", error);
-//             }
-//         };
-//     }
-
-//     // Delete lecturer
-//     async function deleteLecturer(lecturerId) {
-//         if (!confirm("Are you sure you want to delete this lecturer?")) return;
-
-//         try {
-//             const response = await fetch(`http://localhost:5000/api/lecturers/delete/${lecturerId}`, {
-//                 method: "DELETE",
-//                 headers: { Authorization: `Bearer ${token}` },
-//             });
-
-//             if (!response.ok) throw new Error("Failed to delete lecturer");
-
-//             fetchLecturers();
-//         } catch (error) {
-//             console.error("Error deleting lecturer:", error);
-//         }
-//     }
-
-//     // Search lecturers
-//     searchInput.addEventListener("input", function () {
-//         const searchTerm = this.value.toLowerCase();
-//         document.querySelectorAll("#lecturers-table tr").forEach(row => {
-//             const lecturerName = row.cells[1].textContent.toLowerCase();
-//             const lecturerEmail = row.cells[2].textContent.toLowerCase();
-//             const lecturerCourse = row.cells[4].textContent.toLowerCase();
-//             row.style.display = (lecturerName.includes(searchTerm) || lecturerEmail.includes(searchTerm) || lecturerCourse.includes(searchTerm)) ? "" : "none";
-//         });
-//     });
-
-//     fetchCourses();
-//     fetchLecturers();
-// });
-
-///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////Manage Lecturers Functionality///////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", () => {
     loadLecturers();
     loadCourses();
@@ -523,6 +240,7 @@ function loadLecturers() {
                 const row = `
                     <tr>
                         <td>${index + 1}</td>
+                        <td>${lecturer.lecturerId}</td>
                         <td>${lecturer.firstName} ${lecturer.lastName}</td>
                         <td>${lecturer.email}</td>
                         <td>${lecturer.contactNumber || "N/A"}</td>
@@ -551,6 +269,8 @@ document.getElementById("add-lecturer-form").addEventListener("submit", function
     const password = document.getElementById("password").value.trim();
     const confirmPassword = document.getElementById("confirm-password").value.trim();
     const course = document.getElementById("course").value; // Selected course ID
+    const department = document.getElementById("lecturer-department").value.trim();
+
 
     if (password !== confirmPassword) {
         alert("Passwords do not match!");
@@ -564,6 +284,7 @@ document.getElementById("add-lecturer-form").addEventListener("submit", function
         password,
         contactNumber: phone,
         courses: [course], // Send course ID
+        department,
     };
 
     fetch("http://localhost:5000/api/users/add-lecturer", {
@@ -596,6 +317,10 @@ function loadCourses() {
         })
         .catch(error => console.error("Error loading courses:", error));
 }
+
+// Edit lecturer (pre-fill the modal)
+function editLecturer(lecturerFirstName, lecturerLastName, lecturerEmail, lecturerPassword)
+
 function deleteLecturer(lecturerId) {
     if (!confirm("Are you sure you want to delete this lecturer?")) return;
 
@@ -607,6 +332,7 @@ function deleteLecturer(lecturerId) {
         })
         .catch(error => console.error("Error deleting lecturer:", error));
 }
+loadCourses(); // Load courses on page load
 
 
 
@@ -669,7 +395,7 @@ function deleteUser(userId) {
         })
         .catch(error => console.error("Error deleting user:", error));
 }
-
+loadUsers(); // Load users on page load
 
 ///////////////////////////////////////////Manage Students///////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", () => {
