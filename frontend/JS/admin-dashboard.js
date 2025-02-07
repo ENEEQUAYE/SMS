@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function editCourse(courseId, courseName, courseCode, courseDescription) {
         courseNameInput.value = courseName;
         courseCodeInput.value = courseCode;
-        courseDescriptionTextArea.value = courseDescription || "";  // Set description if available
+        courseDescriptionTextArea.value = courseDescription;  // Set description if available
         $("#addCourseModal").modal("show");
 
         courseForm.onsubmit = async function (event) {
@@ -222,13 +222,12 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchCourses(); // Initial fetch
 });
 
-///////////////////////////////////////////////////////////Manage Lecturers Functionality///////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", () => {
     loadLecturers();
     loadCourses();
 });
 
-// Function to load lecturers
+// Function to Load Lecturers
 function loadLecturers() {
     fetch("http://localhost:5000/api/users/lecturers")
         .then(response => response.json())
@@ -244,70 +243,53 @@ function loadLecturers() {
                         <td>${lecturer.firstName} ${lecturer.lastName}</td>
                         <td>${lecturer.email}</td>
                         <td>${lecturer.contactNumber || "N/A"}</td>
+                        <td>${lecturer.department || "N/A"}</td>
                         <td>${lecturer.courses.map(course => course.name).join(", ") || "N/A"}</td>
                         <td>
-                             <button class="btn btn-warning btn-sm edit-lecturer" data-id="${lecturer._id}" data-name="${lecturer.firstName}" 
-                                data-email="${lecturer.email}" data-phone="${lecturer.phone}" data-course="${lecturer.course ? lecturer.course._id : ''}"><i class="fas fa-edit"></i>Edit</button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteLecturer('${lecturer._id}')"><i class="fas fa-trash"></i>Delete</button>
+                            <button class="btn btn-warning btn-sm edit-lecturer" 
+                                data-id="${lecturer._id}" 
+                                data-firstname="${lecturer.firstName}" 
+                                data-lastname="${lecturer.lastName}" 
+                                data-email="${lecturer.email}" 
+                                data-phone="${lecturer.contactNumber}" 
+                                data-course="${lecturer.courses.length > 0 ? lecturer.courses[0]._id : ''}"
+                                data-department="${lecturer.department}">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteLecturer('${lecturer._id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
                         </td>
                     </tr>
                 `;
                 lecturersTable.innerHTML += row;
             });
+
+            // Attach event listeners for Edit buttons
+            document.querySelectorAll(".edit-lecturer").forEach(button => {
+                button.addEventListener("click", function () {
+                    editLecturer(
+                        this.dataset.id,
+                        this.dataset.firstname,
+                        this.dataset.lastname,
+                        this.dataset.email,
+                        this.dataset.phone,
+                        this.dataset.course,
+                        this.dataset.department
+                    );
+                });
+            });
         })
         .catch(error => console.error("Error loading lecturers:", error));
 }
 
-
-document.getElementById("add-lecturer-form").addEventListener("submit", function (event) {
-    event.preventDefault(); // Prevent form reload
-
-    const firstName = document.getElementById("lecturer-first-name").value.trim();
-    const lastName = document.getElementById("lecturer-last-name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const confirmPassword = document.getElementById("confirm-password").value.trim();
-    const course = document.getElementById("course").value; // Selected course ID
-    const department = document.getElementById("lecturer-department").value.trim();
-
-
-    if (password !== confirmPassword) {
-        alert("Passwords do not match!");
-        return;
-    }
-
-    const lecturerData = {
-        firstName,
-        lastName,
-        email,
-        password,
-        contactNumber: phone,
-        courses: [course], // Send course ID
-        department,
-    };
-
-    fetch("http://localhost:5000/api/users/add-lecturer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(lecturerData),
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);
-        document.getElementById("add-lecturer-form").reset();
-        loadLecturers(); // Refresh the table
-        bootstrap.Modal.getInstance(document.getElementById("addLecturerModal")).hide(); // Close modal
-    })
-    .catch(error => console.error("Error adding lecturer:", error));
-});
+// Function to Load Courses
 function loadCourses() {
-    fetch("http://localhost:5000/api/courses") // Ensure this API exists in your backend
+    fetch("http://localhost:5000/api/courses")
         .then(response => response.json())
         .then(courses => {
             const courseDropdown = document.getElementById("course");
             courseDropdown.innerHTML = '<option value="" selected disabled>Select Course</option>';
-
             courses.forEach(course => {
                 const option = document.createElement("option");
                 option.value = course._id;
@@ -318,9 +300,89 @@ function loadCourses() {
         .catch(error => console.error("Error loading courses:", error));
 }
 
-// Edit lecturer (pre-fill the modal)
-function editLecturer(lecturerFirstName, lecturerLastName, lecturerEmail, lecturerPassword)
+// Function to Handle Add/Edit Lecturer
+document.getElementById("lecturer-form").addEventListener("submit", async function (event) {
+    event.preventDefault();
 
+    const lecturerId = document.getElementById("lecturer-id").value; // Check if it's an edit
+    const firstName = document.getElementById("lecturer-first-name").value;
+    const lastName = document.getElementById("lecturer-last-name").value;
+    const email = document.getElementById("email").value;
+    const phone = document.getElementById("phone").value;
+    const department = document.getElementById("department").value;
+    const course = document.getElementById("course").value;
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
+
+    if (!lecturerId && (password !== confirmPassword)) {
+        alert("Passwords do not match!");
+        return;
+    }
+
+    const lecturerData = {
+        firstName,
+        lastName,
+        email,
+        contactNumber: phone,
+        department,
+        courses: [course]
+    };
+
+    if (!lecturerId) {
+        // Only include password for new lecturer
+        lecturerData.password = password;
+    }
+
+    try {
+        let response;
+        if (lecturerId) {
+            // Update Lecturer
+            response = await fetch(`http://localhost:5000/api/users/edit-lecturer/${lecturerId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(lecturerData),
+            });
+        } else {
+            // Add New Lecturer
+            response = await fetch("http://localhost:5000/api/users/add-lecturer", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(lecturerData),
+            });
+        }
+
+        if (response.ok) {
+            alert(lecturerId ? "Lecturer updated successfully" : "Lecturer added successfully");
+            new bootstrap.Modal(document.getElementById("addLecturerModal")).hide(); // Close Modal
+            loadLecturers(); // Refresh List
+            document.getElementById("lecturer-form").reset();
+            document.getElementById("lecturer-id").value = ""; // Reset edit mode
+        } else {
+            alert("Failed to save lecturer");
+        }
+    } catch (error) {
+        console.error("Error saving lecturer:", error);
+    }
+});
+
+// Function to Edit Lecturer
+function editLecturer(lecturerId, firstName, lastName, email, phone, course, department) {
+    document.getElementById("lecturer-id").value = lecturerId;
+    document.getElementById("lecturer-first-name").value = firstName;
+    document.getElementById("lecturer-last-name").value = lastName;
+    document.getElementById("email").value = email;
+    document.getElementById("phone").value = phone;
+    document.getElementById("department").value = department;
+    document.getElementById("course").value = course;
+
+    // Hide Password Fields for Editing
+    document.getElementById("password-section").style.display = "none";
+
+    // Show Modal
+    new bootstrap.Modal(document.getElementById("addLecturerModal")).show();
+}
+
+// Function to Delete Lecturer
 function deleteLecturer(lecturerId) {
     if (!confirm("Are you sure you want to delete this lecturer?")) return;
 
@@ -332,7 +394,11 @@ function deleteLecturer(lecturerId) {
         })
         .catch(error => console.error("Error deleting lecturer:", error));
 }
-loadCourses(); // Load courses on page load
+
+// Load Courses Initially
+loadCourses();
+
+
 
 
 
@@ -400,6 +466,7 @@ loadUsers(); // Load users on page load
 ///////////////////////////////////////////Manage Students///////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", () => {
     loadStudents();
+    loadCourses();
 });
 
 // Function to load students
