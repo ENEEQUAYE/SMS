@@ -222,6 +222,8 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchCourses(); // Initial fetch
 });
 
+
+/////////////////////////////////////////////////////////////Manage Lecturer Functionalities////////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", () => {
     loadLecturers();
     loadCourses();
@@ -268,7 +270,7 @@ function loadLecturers() {
             // Attach event listeners for Edit buttons
             document.querySelectorAll(".edit-lecturer").forEach(button => {
                 button.addEventListener("click", function () {
-                    editLecturer(
+                    openEditModal(
                         this.dataset.id,
                         this.dataset.firstname,
                         this.dataset.lastname,
@@ -284,10 +286,11 @@ function loadLecturers() {
 }
 
 // Function to Load Courses
-function loadCourses() {
+function loadLecturerCourses() {
     fetch("http://localhost:5000/api/courses")
         .then(response => response.json())
         .then(courses => {
+            // Populate Add Lecturer Modal Dropdown
             const courseDropdown = document.getElementById("course");
             courseDropdown.innerHTML = '<option value="" selected disabled>Select Course</option>';
             courses.forEach(course => {
@@ -296,15 +299,24 @@ function loadCourses() {
                 option.textContent = course.name;
                 courseDropdown.appendChild(option);
             });
+
+            // Populate Edit Lecturer Modal Dropdown
+            const editCourseDropdown = document.getElementById("edit-course");
+            editCourseDropdown.innerHTML = '<option value="" selected disabled>Select Course</option>';
+            courses.forEach(course => {
+                const option = document.createElement("option");
+                option.value = course._id;
+                option.textContent = course.name;
+                editCourseDropdown.appendChild(option);
+            });
+
         })
         .catch(error => console.error("Error loading courses:", error));
 }
-
-// Function to Handle Add/Edit Lecturer
-document.getElementById("lecturer-form").addEventListener("submit", async function (event) {
+// Function to Handle Adding a Lecturer
+document.getElementById("add-lecturer-form").addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    const lecturerId = document.getElementById("lecturer-id").value; // Check if it's an edit
     const firstName = document.getElementById("lecturer-first-name").value;
     const lastName = document.getElementById("lecturer-last-name").value;
     const email = document.getElementById("email").value;
@@ -314,7 +326,7 @@ document.getElementById("lecturer-form").addEventListener("submit", async functi
     const password = document.getElementById("password").value;
     const confirmPassword = document.getElementById("confirm-password").value;
 
-    if (!lecturerId && (password !== confirmPassword)) {
+    if (password !== confirmPassword) {
         alert("Passwords do not match!");
         return;
     }
@@ -325,62 +337,82 @@ document.getElementById("lecturer-form").addEventListener("submit", async functi
         email,
         contactNumber: phone,
         department,
-        courses: [course]
+        courses: [course],
+        password
     };
 
-    if (!lecturerId) {
-        // Only include password for new lecturer
-        lecturerData.password = password;
-    }
-
     try {
-        let response;
-        if (lecturerId) {
-            // Update Lecturer
-            response = await fetch(`http://localhost:5000/api/users/edit-lecturer/${lecturerId}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(lecturerData),
-            });
-        } else {
-            // Add New Lecturer
-            response = await fetch("http://localhost:5000/api/users/add-lecturer", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(lecturerData),
-            });
-        }
+        const response = await fetch("http://localhost:5000/api/users/add-lecturer", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(lecturerData),
+        });
 
         if (response.ok) {
-            alert(lecturerId ? "Lecturer updated successfully" : "Lecturer added successfully");
-            new bootstrap.Modal(document.getElementById("addLecturerModal")).hide(); // Close Modal
-            loadLecturers(); // Refresh List
-            document.getElementById("lecturer-form").reset();
-            document.getElementById("lecturer-id").value = ""; // Reset edit mode
+            alert("Lecturer added successfully");
+            new bootstrap.Modal(document.getElementById("addLecturerModal")).hide();
+            loadLecturers();
+            document.getElementById("add-lecturer-form").reset();
         } else {
-            alert("Failed to save lecturer");
+            alert("Failed to add lecturer");
         }
     } catch (error) {
-        console.error("Error saving lecturer:", error);
+        console.error("Error adding lecturer:", error);
     }
 });
 
-// Function to Edit Lecturer
-function editLecturer(lecturerId, firstName, lastName, email, phone, course, department) {
-    document.getElementById("lecturer-id").value = lecturerId;
-    document.getElementById("lecturer-first-name").value = firstName;
-    document.getElementById("lecturer-last-name").value = lastName;
-    document.getElementById("email").value = email;
-    document.getElementById("phone").value = phone;
-    document.getElementById("department").value = department;
-    document.getElementById("course").value = course;
+// Function to Open Edit Lecturer Modal
+function openEditModal(id, firstName, lastName, email, phone, course, department) {
+    document.getElementById("edit-lecturer-id").value = id;
+    document.getElementById("edit-lecturer-first-name").value = firstName;
+    document.getElementById("edit-lecturer-last-name").value = lastName;
+    document.getElementById("edit-email").value = email;
+    document.getElementById("edit-phone").value = phone;
+    document.getElementById("edit-department").value = department;
+    document.getElementById("edit-course").value = course;
 
-    // Hide Password Fields for Editing
-    document.getElementById("password-section").style.display = "none";
-
-    // Show Modal
-    new bootstrap.Modal(document.getElementById("addLecturerModal")).show();
+    new bootstrap.Modal(document.getElementById("editLecturerModal")).show();
 }
+
+// Function to Handle Editing a Lecturer
+document.getElementById("edit-lecturer-form").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const lecturerId = document.getElementById("edit-lecturer-id").value;
+    const firstName = document.getElementById("edit-lecturer-first-name").value;
+    const lastName = document.getElementById("edit-lecturer-last-name").value;
+    const email = document.getElementById("edit-email").value;
+    const phone = document.getElementById("edit-phone").value;
+    const department = document.getElementById("edit-department").value;
+    const course = document.getElementById("edit-course").value;
+
+    const updatedLecturerData = {
+        firstName,
+        lastName,
+        email,
+        contactNumber: phone,
+        department,
+        courses: [course]
+    };
+
+    try {
+        const response = await fetch(`http://localhost:5000/api/users/edit-lecturer/${lecturerId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updatedLecturerData),
+        });
+
+        if (response.ok) {
+            alert("Lecturer updated successfully");
+            new bootstrap.Modal(document.getElementById("editLecturerModal")).hide();
+            loadLecturers();
+        } else {
+            alert("Failed to update lecturer");
+        }
+    } catch (error) {
+        console.error("Error updating lecturer:", error);
+    }
+});
 
 // Function to Delete Lecturer
 function deleteLecturer(lecturerId) {
@@ -390,13 +422,22 @@ function deleteLecturer(lecturerId) {
         .then(response => response.json())
         .then(data => {
             alert(data.message);
-            loadLecturers(); // Refresh table
+            loadLecturers();
         })
         .catch(error => console.error("Error deleting lecturer:", error));
 }
 
+// Function to Search Lecturers
+document.getElementById("search-lecturers").addEventListener("input", function () {
+    const searchValue = this.value.toLowerCase();
+    document.querySelectorAll("#lecturers-table tr").forEach(row => {
+        const name = row.cells[2].textContent.toLowerCase();
+        row.style.display = name.includes(searchValue) ? "" : "none";
+    });
+});
+
 // Load Courses Initially
-loadCourses();
+loadLecturerCourses();
 
 
 
@@ -469,87 +510,94 @@ document.addEventListener("DOMContentLoaded", () => {
     loadCourses();
 });
 
-// Function to load students
+// Load students from backend
 function loadStudents() {
     fetch("http://localhost:5000/api/users/students")
         .then(response => response.json())
         .then(students => {
             const studentsTable = document.getElementById("students-table-body");
-            studentsTable.innerHTML = ""; // Clear table before adding new data
+            studentsTable.innerHTML = ""; // Clear table before adding data
 
             students.forEach((student, index) => {
                 const row = `
                     <tr>
                         <td>${index + 1}</td>
+                        <td>${student.studentId}</td>
                         <td>${student.firstName} ${student.lastName}</td>
-                        <td>${student.studentID}</td>
-                        <td>${student.courses.map(course => course.name).join(", ") || "N/A"}</td>
+                        <td>${student.email}</td>
+                        <td>${student.coursesEnrolled.map(course => course.courseId.name).join(", ") || "N/A"}</td>
                         <td>${new Date(student.enrollmentDate).toLocaleDateString()}</td>
-                        <td>${student.contactNumber || "N/A"}</td>
+                        <td>${student.contactNumber}</td>
                         <td>
-                            <button class="btn btn-primary" onclick="editStudent(${student.studentID})">Edit</button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteStudent('${student._id}')">Delete</button>
+                            <button class="btn btn-warning btn-sm edit-student" data-id="${student._id}" data-name="${student.firstName} ${student.lastName}" data-email="${student.email}" data-phone="${student.contactNumber}" data-course="${student.coursesEnrolled.map(course => course.courseId._id)}"><i class="fas fa-edit"></i>Edit</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteStudent('${student._id}')"><i class="fas fa-trash"></i>Delete</button>
                         </td>
                     </tr>
                 `;
                 studentsTable.innerHTML += row;
             });
+
+            // Attach event listeners to Edit buttons
+            document.querySelectorAll(".edit-student").forEach(button => {
+                button.addEventListener("click", function () {
+                    editStudent(this.dataset.id, this.dataset.name, this.dataset.email, this.dataset.phone, this.dataset.course);
+                });
+            });
         })
         .catch(error => console.error("Error loading students:", error));
 }
-
-document.getElementById("search-students").addEventListener("input", function () {
-    const searchValue = this.value.toLowerCase();
-    const rows = document.querySelectorAll("#students-table-body tr");
-
-    rows.forEach(row => {
-        const name = row.cells[1].textContent.toLowerCase();
-        const studentID = row.cells[2].textContent.toLowerCase();
-        const course = row.cells[3].textContent.toLowerCase();
-
-        if (name.includes(searchValue) || studentID.includes(searchValue) || course.includes(searchValue)) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
+// Load courses from backend
+function loadCourses() {
+    fetch("http://localhost:5000/api/courses")
+    .then(response => response.json())
+    .then(courses => {
+        const coursesSelect = document.getElementById("student-course");
+        coursesSelect.innerHTML = '<option value="" selected disabled>Select Course</option>';
+        courses.forEach(course => {
+            const option = `<option value="${course._id}">${course.name}</option>`;
+            coursesSelect.innerHTML += option;
         }
-    });
-});
+    );
+    })
+    .catch(error => console.error("Error loading courses:", error));
+}
 
-
-document.getElementById("student-form").addEventListener("submit", function (event) {
+// Function to add a new student
+document.getElementById("add-student-form").addEventListener("submit", function (event) {
     event.preventDefault();
 
     const studentData = {
         firstName: document.getElementById("student-first-name").value,
         lastName: document.getElementById("student-last-name").value,
-        studentID: document.getElementById("student-id").value,
-        course: document.getElementById("course-enrolled").value,
-        email: document.getElementById("email").value,
-        contact: document.getElementById("phone").value,
-        dateOfBirth: document.getElementById("date-of-birth").value,
-        gender: document.getElementById("gender").value,
-        country: document.getElementById("country").value,
-        state: document.getElementById("state").value,
+        email: document.getElementById("student-email").value,
+        password: document.getElementById("student-password").value,
+        contactNumber: document.getElementById("student-phone").value,
+        dateOfBirth: document.getElementById("student-dob").value,
+        gender: document.getElementById("student-gender").value,
         highestEducation: document.getElementById("highest-education").value,
-        emergencyContact: document.getElementById("emergency-contact").value,
-        password: document.getElementById("password").value
+        address: document.getElementById("student-address").value,
+        emergencyContact: {
+            name: document.getElementById("emergency-contact-name").value,
+            phone: document.getElementById("emergency-contact-phone").value,
+        },
+        coursesEnrolled: [{ courseId: document.getElementById("student-course").value }]
     };
 
     fetch("http://localhost:5000/api/users/add-student", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(studentData)
+        body: JSON.stringify(studentData),
     })
     .then(response => response.json())
     .then(data => {
         alert(data.message);
-        loadStudents(); // Refresh student list
-        document.getElementById("student-form").reset();
-        new bootstrap.Modal(document.getElementById("addStudentModal")).hide();
+        loadStudents();
+        bootstrap.Modal.getInstance(document.getElementById("addStudentModal")).hide();
     })
     .catch(error => console.error("Error adding student:", error));
 });
 
+// Function to delete student
 function deleteStudent(studentId) {
     if (!confirm("Are you sure you want to delete this student?")) return;
 
@@ -557,7 +605,7 @@ function deleteStudent(studentId) {
         .then(response => response.json())
         .then(data => {
             alert(data.message);
-            loadStudents(); // Refresh student list
+            loadStudents();
         })
         .catch(error => console.error("Error deleting student:", error));
 }

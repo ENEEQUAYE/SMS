@@ -130,10 +130,52 @@ router.delete("/delete/:id", async (req, res) => {
     }
 });
 
-// GET all students
+/// Add Student
+router.post("/add-student", async (req, res) => {
+    try {
+        const { firstName, lastName, email, password, contactNumber, dateOfBirth, gender, highestEducation, address, emergencyContact, coursesEnrolled } = req.body;
+
+        // Check if email already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: "Email is already registered" });
+        }
+
+        // Generate Student ID
+        const studentId = `STU-${Math.floor(100000 + Math.random() * 900000)}`;
+
+        // Hash Password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create new student
+        const newStudent = new Student({
+            studentId,
+            firstName,
+            lastName,
+            email,
+            password: hashedPassword,
+            contactNumber,
+            dateOfBirth,
+            gender,
+            highestEducation,
+            address,
+            emergencyContact,
+            coursesEnrolled,
+            role: "Student",
+        });
+
+        await newStudent.save();
+        res.status(201).json({ message: "Student added successfully", student: newStudent });
+    } catch (error) {
+        console.error("Error adding student:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+// Get All Students
 router.get("/students", async (req, res) => {
     try {
-        const students = await Student.find();
+        const students = await Student.find().populate("coursesEnrolled.courseId", "name");
         res.json(students);
     } catch (error) {
         console.error("Error fetching students:", error);
@@ -141,43 +183,28 @@ router.get("/students", async (req, res) => {
     }
 });
 
-// ADD Student
-router.post("/add-student", async (req, res) => {
+// Edit Student
+router.put("/edit-student/:id", async (req, res) => {
     try {
-        const { email, firstName, lastName, contactNumber, coursesEnrolled, academicYear, address, dateOfBirth, gender, emergencyContact } = req.body;
-
-        // Check if email is already registered
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: "Email is already registered" });
+        const updatedData = req.body;
+        if (updatedData.password) {
+            updatedData.password = await bcrypt.hash(updatedData.password, 10);
         }
 
-        // Generate student ID
-        const studentId = `STU-${Math.floor(1000 + Math.random() * 9000)}`;
+        const updatedStudent = await Student.findByIdAndUpdate(req.params.id, updatedData, { new: true });
 
-        const newStudent = new Student({
-            firstName,
-            lastName,
-            email,
-            contactNumber,
-            studentId,
-            coursesEnrolled: coursesEnrolled || [],
-            academicYear: academicYear || "Unknown",
-            address: address || {},
-            dateOfBirth,
-            gender,
-            emergencyContact: emergencyContact || {},
-        });
+        if (!updatedStudent) {
+            return res.status(404).json({ message: "Student not found" });
+        }
 
-        await newStudent.save();
-        res.json({ message: "Student added successfully", student: newStudent });
+        res.json({ message: "Student updated successfully", student: updatedStudent });
     } catch (error) {
-        console.error("Error adding student:", error);
+        console.error("Error updating student:", error);
         res.status(500).json({ message: "Server error" });
     }
 });
 
-// DELETE Student
+// Delete Student
 router.delete("/delete-student/:id", async (req, res) => {
     try {
         await Student.findByIdAndDelete(req.params.id);
@@ -187,5 +214,25 @@ router.delete("/delete-student/:id", async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 });
+
+// Search Students by Name, ID, or Course
+router.get("/search-students", async (req, res) => {
+    try {
+        const { query } = req.query;
+        const students = await Student.find({
+            $or: [
+                { studentId: { $regex: query, $options: "i" } },
+                { firstName: { $regex: query, $options: "i" } },
+                { lastName: { $regex: query, $options: "i" } },
+            ],
+        }).populate("coursesEnrolled.courseId", "name");
+
+        res.json(students);
+    } catch (error) {
+        console.error("Error searching students:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
 
 module.exports = router;
