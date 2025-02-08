@@ -1,8 +1,88 @@
+//backend/routes/users.js
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const multer = require("multer");
 const { User, Lecturer, Student } = require("../models/User");
-
+const { authenticate } = require("../middlewares/authMiddleware"); // Correct import
+const path = require("path");
+const Course = require("../models/Course");
 const router = express.Router();
+
+// ✅ Set up Multer storage
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "uploads/"); // Save files in the 'uploads' directory
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+        cb(null, `${uniqueSuffix}${path.extname(file.originalname)}`);
+    },
+});
+
+const upload = multer({ storage });
+
+// ✅ Upload Profile Picture Route
+router.post("/upload-profile-pic", authenticate, upload.single("profilePicture"), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: "No file uploaded" });
+        }
+
+        const profilePicturePath = `/uploads/${req.file.filename}`;
+        await User.findByIdAndUpdate(req.user.id, { profilePicture: profilePicturePath });
+
+        res.json({ message: "Profile picture updated", profilePicture: profilePicturePath });
+    } catch (error) {
+        console.error("Error uploading profile picture:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+// ✅ Get User Profile (Requires Authentication)
+router.get("/profile", authenticate, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select("-password");
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        res.json(user);
+    } catch (error) {
+        console.error("Error fetching profile:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+// ✅ Update Profile (Requires Authentication)
+router.put("/update-profile", authenticate, async (req, res) => {
+    try {
+        const { firstName, lastName, contactNumber, position } = req.body;
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user.id,
+            { firstName, lastName, contactNumber, position },
+            { new: true, select: "-password" }
+        );
+
+        res.json({ message: "Profile updated successfully", user: updatedUser });
+    } catch (error) {
+        console.error("Error updating profile:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+// ✅ Get Profile Picture URL
+router.get("/profile-pic/:userId", async (req, res) => {
+    try {
+        const user = await User.findById(req.params.userId);
+        if (!user || !user.profilePicture) {
+            return res.status(404).json({ message: "Profile picture not found" });
+        }
+
+        res.json({ profilePicture: user.profilePicture });
+    } catch (error) {
+        console.error("Error fetching profile picture:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
 
 // Add Lecturer
 router.post("/add-lecturer", async (req, res) => {
@@ -230,6 +310,19 @@ router.get("/search-students", async (req, res) => {
         res.json(students);
     } catch (error) {
         console.error("Error searching students:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+// Dashboard Metrics: Get total students, lecturers, and courses
+router.get("/dashboard-metrics", async (req, res) => {
+    try {
+        const totalStudents = await Student.countDocuments();
+        const totalLecturers = await Lecturer.countDocuments();
+        const totalCourses = await Course.countDocuments(); // Ensure Course model is imported
+        res.json({ totalStudents, totalLecturers, totalCourses });
+    } catch (error) {
+        console.error("Error fetching dashboard metrics:", error);
         res.status(500).json({ message: "Server error" });
     }
 });

@@ -57,11 +57,16 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     function setProfile() {
         if (user) {
-            document.querySelector(".profile img").src = user.profilePicture || "https://randomuser.me/api/portraits/men/85.jpg";
+            // ✅ Ensure absolute URL
+            const profilePicUrl = user.profilePicture 
+                ? `http://localhost:5000${user.profilePicture}` 
+                : "https://randomuser.me/api/portraits/men/85.jpg";
+    
+            document.querySelector(".profile img").src = profilePicUrl;
             document.querySelector(".profile span").textContent = user.firstName || "Admin";
         }
-
-}
+    }
+    
 function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -70,6 +75,115 @@ function logout() {
 
 document.getElementById("logout").addEventListener("click", logout);
 setProfile();
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadUserProfile();
+});
+
+// Load User Profile from Backend or Local Storage
+function loadUserProfile() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const token = localStorage.getItem("token");
+
+    if (!user || !token) {
+        window.location.href = "index.html"; // Redirect to login if no user found
+        return;
+    }
+
+    // Populate profile section
+    document.getElementById("profile-name").textContent = `${user.firstName} ${user.lastName}`;
+    document.getElementById("profile-postion").innerHTML = `<i class="fas fa-user-tag"></i> ${user.position || 'N/A'}`;
+    document.getElementById("profile-email").innerHTML = `<i class="fas fa-envelope"></i> ${user.email}`;
+    document.getElementById("profile-contact").innerHTML = `<i class="fas fa-phone"></i> ${user.contactNumber || 'N/A'}`;
+    document.getElementById("profile-pic").src = user.profilePicture || "img/user.jpg";
+}
+
+
+// Handle Profile Picture Upload
+document.getElementById("upload-pic").addEventListener("change", function (event) {
+    const file = event.target.files[0];
+    if (file) {
+        const formData = new FormData();
+        formData.append("profilePicture", file);
+
+        fetch("http://localhost:5000/api/users/upload-profile-pic", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.profilePicture) {
+                // ✅ Update the profile picture immediately
+                const newProfilePicUrl = `http://localhost:5000${data.profilePicture}`;
+                document.getElementById("profile-pic").src = newProfilePicUrl;
+
+                // ✅ Update localStorage with the new image
+                let user = JSON.parse(localStorage.getItem("user"));
+                user.profilePicture = data.profilePicture; 
+                localStorage.setItem("user", JSON.stringify(user));
+
+                alert("Profile picture updated successfully!");
+
+                // ✅ Force refresh of the image (By appending a timestamp)
+                document.getElementById("profile-pic").src = newProfilePicUrl + `?timestamp=${new Date().getTime()}`;
+            }
+        })
+        .catch(error => console.error("Error uploading profile picture:", error));
+    }
+});
+
+
+// ✅ Ensure profile picture is loaded on page load
+document.addEventListener("DOMContentLoaded", function () {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user && user.profilePicture) {
+        document.getElementById("profile-pic").src = `http://localhost:5000${user.profilePicture}`;
+    }
+});
+
+
+// Handle Profile Editing
+document.getElementById("edit-profile").addEventListener("click", function () {
+    const user = JSON.parse(localStorage.getItem("user"));
+    
+    // Prefill edit modal fields
+    document.getElementById("edit-first-name").value = user.firstName;
+    document.getElementById("edit-last-name").value = user.lastName;
+    document.getElementById("edit-email").value = user.email;
+    document.getElementById("edit-contact").value = user.contactNumber || "";
+    document.getElementById("edit-position").value = user.position || "";
+});
+
+// Submit Profile Updates
+document.getElementById("editProfileForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+    
+    const updatedUser = {
+        firstName: document.getElementById("edit-first-name").value,
+        lastName: document.getElementById("edit-last-name").value,
+        contactNumber: document.getElementById("edit-contact").value,
+        position: document.getElementById("edit-position").value
+    };
+
+    fetch("http://localhost:5000/api/users/update-profile", {
+        method: "PUT",
+        headers: { 
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+        },
+        body: JSON.stringify(updatedUser),
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        localStorage.setItem("user", JSON.stringify({ ...JSON.parse(localStorage.getItem("user")), ...updatedUser }));
+        loadUserProfile();
+        bootstrap.Modal.getInstance(document.getElementById("editProfileModal")).hide();
+    })
+    .catch(error => console.error("Error updating profile:", error));
 });
 
 
@@ -526,7 +640,7 @@ function loadStudents() {
                         <td>${student.firstName} ${student.lastName}</td>
                         <td>${student.email}</td>
                         <td>${student.coursesEnrolled.map(course => course.courseId.name).join(", ") || "N/A"}</td>
-                        <td>${new Date(student.enrollmentDate).toLocaleDateString()}</td>
+                       <td>${new Date(student.createdAt).toLocaleDateString()}</td>
                         <td>${student.contactNumber}</td>
                         <td>
                             <button class="btn btn-warning btn-sm edit-student" data-id="${student._id}" data-name="${student.firstName} ${student.lastName}" data-email="${student.email}" data-phone="${student.contactNumber}" data-course="${student.coursesEnrolled.map(course => course.courseId._id)}"><i class="fas fa-edit"></i>Edit</button>
@@ -610,5 +724,62 @@ function deleteStudent(studentId) {
         .catch(error => console.error("Error deleting student:", error));
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+    loadDashboardMetrics();
+    loadCurrentDateTime();
+    setInterval(loadCurrentDateTime, 1000); // Update time every second
+});
+
+// Fetch and display dashboard metrics
+function loadDashboardMetrics() {
+    fetch("http://localhost:5000/api/users/dashboard-metrics", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("total-students").textContent = data.totalStudents || 0;
+        document.getElementById("total-lecturers").textContent = data.totalLecturers || 0;
+        document.getElementById("current-courses").textContent = data.totalCourses || 0;
+        document.getElementById("upcoming-events").textContent = data.upcomingEvents || 0;
+    })
+    .catch(error => console.error("Error loading dashboard metrics:", error));
+}
+
+// Fetch and display events for the calendar
+function loadUpcomingEvents() {
+    fetch("http://localhost:5000/api/events/upcoming", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(response => response.json())
+    .then(events => {
+        const eventList = document.querySelector("#upcoming-events");
+        eventList.innerHTML = events.map(event => `<li>${event.title} - ${new Date(event.date).toLocaleDateString()}</li>`).join("");
+    })
+    .catch(error => console.error("Error loading events:", error));
+}
+
+loadUpcomingEvents();
 
 
+//set date format to dd/mm/yyyy
+function formatDate(date) {
+    let d = new Date(date),
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear();
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+    return [year, month, day].join('-');
+}
+// Display current date and time
+function loadCurrentDateTime() {
+    const dateTimeElement = document.getElementById("current-date-time");
+    const date = new Date();
+    const formattedDate = formatDate(date);
+    dateTimeElement.textContent = formattedDate;
+
+    const timeOptions = { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
+    const time = date.toLocaleTimeString('en-US', timeOptions);
+
+    dateTimeElement.textContent = `${formattedDate} ${time}`;
+}

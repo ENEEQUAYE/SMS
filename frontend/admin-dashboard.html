@@ -81,8 +81,8 @@
                             <div class="col-md-3">
                                 <div class="card text-white bg-success">
                                     <div class="card-body">
-                                        <h5 class="card-title">Current Enrollments</h5>
-                                        <p class="card-text fs-4" id="current-enrollments">0</p>
+                                        <h5 class="card-title">Courses</h5>
+                                        <p class="card-text fs-4" id="current-courses">0</p>
                                     </div>
                                 </div>
                             </div>
@@ -156,6 +156,43 @@
                         </div>
                     </div>
                     
+                    <!-- Edit Profile Modal -->
+                        <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="editProfileForm">
+                                            <div class="mb-3">
+                                                <label for="edit-first-name" class="form-label">First Name</label>
+                                                <input type="text" class="form-control" id="edit-first-name" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="edit-last-name" class="form-label">Last Name</label>
+                                                <input type="text" class="form-control" id="edit-last-name" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="edit-email" class="form-label">Email</label>
+                                                <input type="email" class="form-control" id="edit-email" readonly>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="edit-contact" class="form-label">Contact Number</label>
+                                                <input type="tel" class="form-control" id="edit-contact">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="edit-position" class="form-label">Position</label>
+                                                <input type="text" class="form-control" id="edit-position">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     
                     <!--------------------------------------------------------Manage Courses----------------------------------------------->
                
@@ -461,10 +498,10 @@
                                                         <option value="" selected disabled>Select Course</option>
                                                     </select>
                                                 </div>
-                                                <div class="col-md-6 mb-3">
+                                                <!-- <div class="col-md-6 mb-3">
                                                     <label for="enrollment-date" class="form-label">Enrollment Date</label>
                                                     <input type="date" id="enrollment-date" class="form-control" required>
-                                                </div>
+                                                </div> -->
                                             </div>
 
                                             <div class="row">

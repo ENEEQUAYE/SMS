@@ -1,10 +1,15 @@
+//backend/server.js
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const path = require("path");
 const bcrypt = require("bcryptjs"); // Import bcrypt
 const { User } = require("./models/User"); // Extract User model correctly
+const eventRoutes = require("./routes/event");
+
+
 
 
 const authRoutes = require("./routes/auth");
@@ -18,10 +23,14 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+// ✅ Serve profile pictures from "uploads" folder
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/users", require("./routes/users"));
+app.use("/api/events", eventRoutes);
 
 
 //MongoDB Connection

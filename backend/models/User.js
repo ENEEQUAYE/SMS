@@ -20,7 +20,7 @@
             phone: String,
             },
             department: { type: String },
-            profilePicture: { type: String, default: null },
+            profilePicture: { type: String, default: './frontend/img/user.jpg' },
             isActive: { type: Boolean, default: true },
         },
         { timestamps: true, discriminatorKey: "role" },
