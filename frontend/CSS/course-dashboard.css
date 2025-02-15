@@ -1,32 +1,45 @@
-
 :root {
     --primary-color: #042954;
     --secondary-color: #faa11d;
     --background-color: #f8f9fa;
 }
 
-body {
-    font-family: Arial, sans-serif;
+html, body {
+    height: 100%;
     margin: 0;
-    padding: 0;
-    background-color: var(--background-color);
+    overflow: hidden; /* Prevent double scrollbars */
 }
 
 .wrapper {
     display: flex;
-    flex-wrap: nowrap;
-   
+    height: 100vh; /* Full viewport height */
 }
 
+/* SIDEBAR */
 #sidebar {
     width: 250px;
     background-color: var(--primary-color);
     color: white;
-    min-height: 100vh;
-    height: auto;
+    height: 100vh;
+    overflow-y: auto; /* ✅ Enables sidebar scrolling */
     transition: all 0.3s ease-in-out;
 }
 
+/* Sidebar scrollbar */
+#sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+}
+
+#sidebar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Sidebar Header */
 #sidebar .sidebar-header {
     padding: 10px;
     background: var(--secondary-color);
@@ -40,6 +53,7 @@ body {
     margin-bottom: 10px;
 }
 
+/* Sidebar Navigation */
 #sidebar ul.components {
     padding: 0;
     list-style: none;
@@ -66,23 +80,54 @@ body {
     color: white;
 }
 
-#content {
-    flex-grow: 1;
-    padding: 20px;
-    background-color: var(--background-color);
-    transition: margin-left 0.3s ease-in-out;
+/* DROPDOWN INSIDE SIDEBAR */
+.dropdown-container {
+    padding: 0;
 }
 
-#content #sidebarCollapse {
-    margin-bottom: 20px;
+.dropdown-container .nav-link {
+    display: flex;
+    /* justify-content: space-between; */
+    cursor: pointer;
 }
+
+.sidebar-dropdown {
+    display: none;
+    padding-left: 15px;
+    list-style: none;
+}
+
+.sidebar-dropdown.active {
+    display: block;
+}
+
+.sidebar-dropdown li a {
+    font-size: 0.9rem;
+    padding: 8px 10px;
+    display: block;
+}
+
+/* MAIN CONTENT */
+#main-content {
+    flex-grow: 1;
+    background-color: var(--background-color);
+    transition: margin-left 0.3s ease-in-out;
+    overflow-y: auto; /* Enables scrolling */
+    height: 100vh;
+}
+/* Sticky Header */
 .main-header {
-    background-color: #ffffff; /* White background for contrast */
-    border-bottom: 1px solid #d1d1d1; /* Subtle border */
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+    background-color: #ffffff;
+    border-bottom: 1px solid #d1d1d1;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
-    z-index: 999; /* Ensure it stays above other elements */
+    z-index: 999;
+}
+.sidebar-header{
+    position: sticky;
+    top: 0;
+    z-index: 999;
 }
 
 .main-header h4 {
@@ -100,6 +145,7 @@ body {
     font-size: 0.7rem;
 }
 
+/* Profile Section */
 .profile img {
     border: 2px solid var(--secondary-color);
 }
@@ -108,78 +154,56 @@ body {
     font-weight: 600;
     color: var(--primary-color);
 }
-#contentArea{
+
+/* CONTENT STYLING */
+#contentArea {
     margin-top: 25px;
-    transition: all 0.3s; 
-    justify-content: center;  
+    transition: all 0.3s;
+    justify-content: center;
 }
+
 .card {
     margin-top: 20px;
-}
-
-.dashboard-header h2 {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: var(--primary-color);
-}
-
-.date-time {
-    font-size: 1rem;
-    color: var(--secondary-color);
-}
-
-.card {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.card-title {
-    font-weight: bold;
-    font-size: 1.2rem;
-}
-
+/* TABLE STYLES */
 .table-hover tbody tr:hover {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
-#recent-activities .list-group-item {
-    font-size: 0.95rem;
-    border: none;
-    padding: 10px 15px;
-}
-#my-profile {
-   
-    background-color: #f7f7f7; /* Light background */
+/* PROFILE PAGE */
+#profile {
+    background-color: #f7f7f7;
 }
 
-#my-profile .container {
+#profile .container {
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
+    max-width: 600px; background-color: white; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 10px;
 }
 
-#my-profile .profile-header h2 {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: var(--primary-color);
+.profile-details {
+    justify-content: center;
+    align-items: center;
+    /* padding: 10px 90px; */
+    /* margin: 10px 90px; */
+    
+}
+.profile-details .row {
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd; /* Adds separation between fields */
+    justify-content: center;
 }
 
-#my-profile .profile-header p {
-    font-size: 1rem;
-    color: #6c757d;
-}
-
-.profile-picture img {
+#profile-pic{
     width: 150px;
     height: 150px;
     object-fit: cover;
     border: 5px solid var(--secondary-color);
-}
-
-.profile-picture label {
-    margin-top: 10px;
-    cursor: pointer;
 }
 
 #profile-form .form-control {
@@ -187,71 +211,26 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-#profile-form button {
-    border-radius: 5px;
-}
-/* #manage-courses {
-    background-color: #f7f7f7;
-    min-height: 100vh;
-    padding: 20px;
-} */
-
-#manage-courses h2, 
-#add-lecturers h2,
-#manage-students h2,
-#manage-users h2 {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: var(--primary-color);
-}
-
-#courses-table-body td {
-    vertical-align: middle;
-}
-
-.table thead th {
-    font-size: 1rem;
-    font-weight: bold;
-}
-
-.table tbody td {
-    font-size: 0.9rem;
-}
-
-.pagination {
-    margin-top: 20px;
-}
-.modal-header{
+/* MODAL STYLES */
+.modal-header {
     background-color: var(--primary-color);
     color: #ffffff;
 }
-.btn-close{
+
+.btn-close {
     background-color: red;
     color: #ffffff;
 }
 
-/* Sidebar Dropdown */
-.sidebar-dropdown {
-    display: none;
-    padding-left: 15px;
-}
-
-.sidebar-dropdown.active {
-    display: block;
-}
-
-.dropdown-container a {
-    cursor: pointer;
-}
-
-
+/* MOBILE RESPONSIVENESS */
 @media (max-width: 768px) {
     #sidebar {
         margin-left: -250px;
+        position: fixed;
     }
+
     #sidebar.active {
         margin-left: 0;
-        margin-right: -500px;
         z-index: 9999;
         width: 100%;
     }

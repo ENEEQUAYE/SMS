@@ -82,7 +82,44 @@ router.get("/profile-pic/:userId", async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 });
+    
+// Add New Admin User
 
+router.post("/add-admin", async (req, res) => {
+    try {
+        const { firstName, lastName, email, position, contactNumber, password } = req.body;
+
+        // Check if email is already registered
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: "Email is already registered" });
+        }
+        
+
+        // Generate a unique admin ID
+        const adminId = `ADMIN-${Math.floor(1000 + Math.random() * 9000)}`;
+
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create new admin
+        const newAdmin = new User({
+            firstName,
+            lastName,
+            email,
+            password: hashedPassword,
+            contactNumber,
+            position,
+            role: "Admin",
+        });
+        // Save new admin to database
+        await newAdmin.save();
+        res.json({ message: "Admin added successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
 
 // Add Lecturer
 router.post("/add-lecturer", async (req, res) => {
@@ -327,5 +364,48 @@ router.get("/dashboard-metrics", async (req, res) => {
     }
 });
 
+router.get("/lecturer/courses", authenticate, async (req, res) => {
+    try {
+        const lecturer = await Lecturer.findById(req.user.id).populate("courses", "name code description");
+        if (!lecturer) {
+            return res.status(404).json({ message: "Lecturer not found" });
+        }
+        res.json({ courses: lecturer.courses });
+    } catch (error) {
+        console.error("Error fetching courses:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+router.get("/lecturer/students", authenticate, async (req, res) => {
+    try {
+        const lecturer = await Lecturer.findById(req.user.id).populate("courses");
+        if (!lecturer) {
+            return res.status(404).json({ message: "Lecturer not found" });
+        }
+
+        const courses = lecturer.courses.map(course => course._id); // Extract course IDs
+        const students = await Student.find({ "coursesEnrolled.courseId": { $in: courses } })
+            .populate("coursesEnrolled.courseId", "name code");
+
+        res.json({ students });
+    } catch (error) {
+        console.error("Error fetching students:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+// ✅ Get Student's Enrolled Courses
+router.get("/student/courses", authenticate, async (req, res) => {
+    try {
+        const student = await Student.findById(req.user.id).populate("coursesEnrolled.courseId", "name description");
+        if (!student) return res.status(404).json({ message: "Student not found" });
+
+        res.json({ courses: student.coursesEnrolled.map(c => c.courseId) });
+    } catch (error) {
+        console.error("Error fetching student courses:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
 
 module.exports = router;

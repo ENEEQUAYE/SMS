@@ -15,6 +15,7 @@
             gender: { type: String, enum: ["Male", "Female", "Other"] },
             contactNumber: { type: String },
             address: { type: String },
+            highestEducation: { type: String },
             emergencyContact: {
             name: String,
             phone: String,
@@ -58,12 +59,6 @@
             progress: { type: Number, default: 0 }, // Course completion percentage
             },
         ],
-        address: {
-            street: { type: String },
-            city: { type: String },
-            state: { type: String },
-            postalCode: { type: String },
-        },
         })
 
         // Discriminator Models

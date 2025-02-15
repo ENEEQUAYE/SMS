@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Dashboard | CESSTIG</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="CSS/admin-dashboard.css">
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header d-flex align-items-center">
+                <img src="img/logo.png" alt="Logo" class="logo-img">
+                <h4>CESSTIG</h4>
+            </div>
+            <!------------------------
+📌 Course Dashboard Features
+1️⃣ Course Overview
+Displays course title, description, total chapters, and enrolled students.
+Show progress tracking (e.g., percentage of completed chapters).
+2️⃣ Chapter Management
+List of all 24 chapters.
+Lecturer can upload study materials (PDFs, videos, slides, notes).
+Option to lock/unlock chapters based on student progress.
+3️⃣ Assignments & Grading
+Create and manage assignments per chapter.
+Set deadlines and view submitted assignments.
+Grade students and provide feedback.
+4️⃣ Enrolled Students
+View list of students assigned to the course.
+Track individual progress and performance.
+Send direct messages or announcements.
+5️⃣ Study Materials Upload
+Upload and manage PDFs, videos, external links, and lecture slides.
+Allow students to download or preview materials.
+6️⃣ Announcements & Notifications
+Lecturers can post announcements for the entire class.
+Students receive real-time notifications.
+7️⃣ Course Discussions (Forum)
+✅ Features:
+
+A discussion board where lecturers & students can ask and answer questions.
+Option to pin important discussions.
+Upvote/downvote responses to highlight the best answers.
+Real-time updates (new replies appear instantly).
+Option to report inappropriate messages.
+Features:
+Course Overview
+Chapters List (24 chapters for Sterile Processing)
+Enrolled Students
+Assignments & Grading
+Study Materials
+Announcements-->
+
+            <ul class="list-unstyled components">
+                <li><a href="#" class="nav-link active" data-target="course-dashboard"><i class="fas fa-home"></i>Dashboard</a></li>
+                <li><a href="#" class="nav-link" data-target="course-overview"><i class="fas fa-info-circle"></i>Course Overview</a></li>
+                <!--Chapter Management should have a drop-down that displays all 24 chapters which a clickable and their contents will display in the content-section-->
+                <li class="nav-item dropdown">
+
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-book"></i>Chapter Management
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-1">Chapter 1</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-2">Chapter 2</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-3">Chapter 3</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-4">Chapter 4</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-5">Chapter 5</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-6">Chapter 6</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-7">Chapter 7</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-8">Chapter 8</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-9">Chapter 9</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-10">Chapter 10</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-11">Chapter 11</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-12">Chapter 12</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-13">Chapter 13</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-14">Chapter 14</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-15">Chapter 15</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-16">Chapter 16</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-1t">Chapter 17</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-18">Chapter 18</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-19">Chapter 19</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-20">Chapter 20</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-21">Chapter 21</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-22">Chapter 22</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-23">Chapter 23</a></li>
+                        <li><a class="dropdown-item" href="#" data-target="#chapter-24">Chapter 24</a></li>
+                    </ul>
+                </li>
+                <li><a href="#" class="nav-link" data-target="assignments"><i class="fas fa-tasks"></i>Assignments & Grading</a></li>
+                <li><a href="#" class="nav-link" data-target="enrolled-students"><i class="fas fa-users"></i>Enrolled Students</a></li>
+                <li><a href="#" class="nav-link" data-target="study-materials"><i class="fas fa-file-alt"></i>Study Materials</a></li>
+                <li><a href="#" class="nav-link" data-target="announcements"><i class="fas fa-bullhorn"></i>Announcements</a></li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <a href="#" class="nav-link"><i class="fas fa-sign-out-alt"></i>Logout</a>
+            </div>
+        </nav>
+
+        <!-- Page Content -->

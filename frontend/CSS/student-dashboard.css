@@ -1,0 +1,235 @@
+:root {
+    --primary-color: #042954;
+    --secondary-color: #faa11d;
+}
+body {
+    /*background-image*/
+    background-image: url('./frontend/img/logo.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-blend-mode: overlay;
+   
+}
+.header {
+    background-color: var(--primary-color);
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header i {
+    font-size: 1.5rem;
+    color: white;
+}
+.logo {
+    display: flex;
+    align-items: center;
+}
+.logo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--secondary-color);
+}
+.logo h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-left: 5px;
+}
+h1, h2, h3, h4, h5, h6 {
+   font-weight: bold;
+}
+.user {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+}
+.profile img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.notification {
+    position: relative;
+    color: white;
+    font-size: 1.0rem;
+}
+.notification i {
+    /* font-size: 1.5rem; */
+    color: white;
+}
+.navbar {
+    background-color: #d1cfcd;
+}
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+}
+.nav-menu ul {
+    display: flex;
+    list-style: none;
+}
+.nav-menu ul li {
+    margin-right: 20px;
+}
+.nav-menu ul li a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+.nav-menu ul li a:hover {
+    text-decoration: none;
+    color: var(--secondary-color);
+}
+.nav-menu ul li a.active {
+    color: var(--secondary-color);
+}
+#logout {
+    color: blue
+}
+#main-content {
+    margin-top: 20px;
+    opacity: 100%;
+    background-color: transparent;
+  
+}
+.card {
+    margin-top: 20px;
+}
+
+
+/* General Styling */
+#manage-courses, #add-lecturers, #add-students {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+}
+
+/* Heading */
+#manage-courses h2, 
+#add-lecturers h2, 
+#add-students h2 {
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Buttons */
+#manage-courses .btn, 
+#add-lecturers .btn, 
+#add-students .btn {
+    border-radius: 5px;
+}
+
+#manage-courses .btn-primary, 
+#add-lecturers .btn-primary, 
+#add-students .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+#manage-courses .btn-primary:hover, 
+#add-lecturers .btn-primary:hover, 
+#add-students .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+#manage-courses .btn-warning, 
+#add-lecturers .btn-warning, 
+#add-students .btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #000;
+}
+
+#manage-courses .btn-warning:hover, 
+#add-lecturers .btn-warning:hover,
+#add-students .btn-warning:hover {
+    background-color: #d39e00;
+} 
+
+
+#manage-courses .btn-danger, 
+#add-lecturers .btn-danger,
+#add-students .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+#manage-courses .btn-danger:hover, 
+#add-lecturers .btn-danger:hover,
+#add-students .btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Table Styling */
+#manage-courses .table, 
+#add-lecturers .table,
+#add-students .table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#manage-courses .table thead, 
+#add-lecturers .table thead,
+#add-students .table thead {
+    background-color: #007bff;
+    color: white;
+}
+
+#manage-courses .table th,
+#manage-courses .table td,
+#add-lecturers .table th,
+#add-lecturers .table td,
+#add-students .table th,
+#add-students .table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#manage-courses .table tbody tr:hover,
+#add-lecturers .table tbody tr:hover,
+#add-students .table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Modal Styling */
+.modal-content {
+    border-radius: 10px;
+}
+
+.modal-header {
+    background-color: #007bff;
+    color: white;
+}
+
+.modal-footer {
+    justify-content: space-between;
+}
+
+/* Form Inputs */
+.form-group label {
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+.container {
+   background-image: url('./frontend/img/logo.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-blend-mode: overlay;
+}

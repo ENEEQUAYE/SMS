@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Dashboard | CESSTIG</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="CSS/course-dashboard.css">
+    <link rel="icon" type="image/png" href="img/logo.png">
+</head>
+<body>
+    <!-------This is the course dashboard for students-->
+    <div class="wrapper">
+        <!-- Sidebar (should have its own vertical scrollbar) -->
+         <!-- Sidebar -->
+<nav id="sidebar">
+    <div class="sidebar-header d-flex align-items-center">
+        <img src="img/logo.png" alt="Logo" class="logo-img">
+        <h4>CESSTIG</h4>
+    </div>
+    <ul class="list-unstyled components">
+        <li><a href="#" class="nav-link active" data-target="dashboard"><i class="fas fa-info-circle"></i> Course Overview</a></li>
+        <li><a href="#" class="nav-link" data-target="profile"><i class="fas fa-user"></i> Profile</a></li>
+
+        <!-- Chapters Dropdown inside sidebar -->
+        <li class="dropdown-container">
+            <a href="#" class="nav-link dropdown-toggle" id="chapters-toggle">
+                <i class="fas fa-book"></i> Chapters
+            </a>
+            <ul class="list-unstyled sidebar-dropdown" id="chapters-menu">
+                <li><a href="#" class="dropdown-item" data-target="chapter-1">Chapter 1</a></li>
+                <li><a href="#" class="dropdown-item" data-target="chapter-2">Chapter 2</a></li>
+                <li><a href="#" class="dropdown-item" data-target="chapter-3">Chapter 3</a></li>
+                <li><a href="#" class="dropdown-item" data-target="chapter-4">Chapter 4</a></li>
+                <li><a href="#" class="dropdown-item" data-target="chapter-5">Chapter 5</a></li>
+                <li><a href="#" class="dropdown-item" data-target="chapter-6">Chapter 6</a></li>
+                <li><a href="#" class="dropdown-item" data-target="chapter-7">Chapter 7</a></li>
+                <li><a href="#" class="dropdown-item" data-target="chapter-8">Chapter 8</a></li>
+                <li><a href="#" class="dropdown-item" data-target="chapter-9">Chapter 9</a></li>
+                <li><a href="#" class="dropdown-item" data-target="chapter-10">Chapter 10</a></li>
+                <li><a href="#" class="dropdown-item" data-target="chapter-11">Chapter 11</a></li>
+                <li><a class="dropdown-item" href="#" data-target="chapter-12">Chapter 12</a></li>
+                <li><a class="dropdown-item" href="#" data-target="chapter-13">Chapter 13</a></li>
+                <li><a class="dropdown-item" href="#" data-target="chapter-14">Chapter 14</a></li>
+                <li><a class="dropdown-item" href="#" data-target="chapter-15">Chapter 15</a></li>
+                <li><a class="dropdown-item" href="#" data-target="chapter-16">Chapter 16</a></li>
+                <li><a class="dropdown-item" href="#" data-target="chapter-1t">Chapter 17</a></li>
+                <li><a class="dropdown-item" href="#" data-target="chapter-18">Chapter 18</a></li>
+                <li><a class="dropdown-item" href="#" data-target="chapter-19">Chapter 19</a></li>
+                <li><a class="dropdown-item" href="#" data-target="chapter-20">Chapter 20</a></li>
+                <li><a class="dropdown-item" href="#" data-target="chapter-21">Chapter 21</a></li>
+                <li><a class="dropdown-item" href="#" data-target="chapter-22">Chapter 22</a></li>
+                <li><a class="dropdown-item" href="#" data-target="chapter-23">Chapter 23</a></li>
+                <li><a class="dropdown-item" href="#" data-target="chapter-24">Chapter 24</a></li>
+                <!-- Add more chapters as needed -->
+            </ul>
+        </li>
+
+        <li><a href="#" class="nav-link" data-target="assignments"><i class="fas fa-tasks"></i> Assignments</a></li>
+        <li><a href="#" class="nav-link" data-target="tests"><i class="fas fa-clipboard-list"></i> Tests & Quizzes</a></li>
+        <li><a href="#" class="nav-link" data-target="announcements"><i class="fas fa-bullhorn"></i> Announcements</a></li>
+        <li><a href="#" class="nav-link" data-target="gradebook"><i class="fas fa-graduation-cap"></i> Gradebook</a></li>
+        <li><a href="#" class="nav-link" id="logout"><i class="fa-solid fa-power-off"></i>Logout</a></li>
+    </ul>
+</nav>
+
+
+        <!-- Main Content Area -->
+        <div class="container-fluid" id="main-content">
+            <!-- Main Content Header -->
+            <div class="main-header d-flex justify-content-between align-items-center p-3">
+                <button type="button" id="sidebarCollapse" class="btn btn-primary d-lg-none" title="Toggle Sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h4 class="text-primary"></h4>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="notification position-relative">
+                        <i class="fas fa-bell fs-4"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge bg-danger text-white rounded-pill">0</span>
+                    </div>
+                    <div class="profile d-flex align-items-center">
+                        <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="Profile Picture" class="img-fluid rounded-circle" width="40" height="40">
+                        <span class="ms-2">Username</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Content Area -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="content" id="contentArea">
+                        <!-------------------------Dashboard(Course Overview)------------------------------>
+                        <div id="dashboard" class="content-section">
+                            <div class="dashboard-header">
+                                <h2>Course Overview</h2>
+                            </div>
+                            <div class="container">
+                                <!----Course Description only-->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Course Description</h5>
+                                                <p class="card-text">This comprehensive program prepares students to become Sterile Processing Technicians, 
+                                                    responsible for ensuring the proper sterilization, packaging, and storage of medical equipment and supplies. 
+                                                    Students will learn the principles and practices of sterile processing, including:
+                                                </p>
+                                                <h6>Course Objectives: </h6>
+                                                <p class="card-text">1. Understand the importance of sterile processing in healthcare</p>
+                                                <p class="card-text">2. Learn sterilization methods, including autoclaving, dry heat, and ethylene oxide</p>
+                                                <p class="card-text">3. Understand disinfection and cleaning procedures</p>
+                                                <p class="card-text">4. Familiarize with processing and packaging of medical equipment and supplies</p>
+                                                <p class="card-text"> 5. Learn quality control and quality assurance procedures</p>
+                                                <p class="card-text">6. Understand regulations and standards governing sterile processing</p>
+                                                <br>
+                                                <h6>Key Topics</h6>
+                                                <p class="card-text">1. Sterilization and Disinfection: Methods, principles, and applications</p>
+                                                <p class="card-text">2. Processing and Packaging: Preparation, wrapping, and sterilization of medical equipment and supplies</p>
+                                                <p class="card-text">3. Cleaning and Decontamination: Procedures for cleaning and decontaminating medical equipment and supplies</p>
+                                                <p class="card-text">4. Quality Control and Assurance: Monitoring and maintaining quality in sterile processing</p>
+                                                <p class="card-text">5. Regulations and Standards: Compliance with regulatory agencies and industry standards</p>
+                                                <p class="card-text">6. Patient Safety and Infection Control: Principles and practices for ensuring patient safety and preventing infections</p>
+                                                <h6>Certification:</h6>
+                                                <p class="card-text">Upon successful completion of the program, students will be eligible to take the Certified Registered Central Service Technician (CRCST) exam, 
+                                                    offered by the Healthcare Sterile Processing Association (HSPA)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-------------------------Profile------------------------------>
+                        <div id="profile" class="content-section d-none">
+                            
+                            <div class="container p-4">
+                                <div class="dashboard-header text-center">
+                                    <h2>My Profile</h2>
+                                </div>
+                                 <!-- Profile Picture -->
+                                <div class="text-center mb-4">
+                                    <div class="profile-picture">
+                                        <img id="profile-pic" src="img/user.jpg" alt="Profile Picture" class="rounded-circle img-fluid mb-3">
+                                    </div>
+                                    <label for="upload-pic" class="btn btn-outline-secondary btn-sm">
+                                        Upload New Picture
+                                        <input type="file" id="upload-pic" class="d-none">
+                                    </label>
+                                     <div class="profile-details">
+                                        <div class="row">
+                                            <div class="col-4 text-start"><i class="fas fa-user"></i> Name</div>
+                                            <div class="col-1 text-center">:</div>
+                                            <div class="col-7 text-start" id="profile-name">Full Name</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4 text-start"><i class="fas fa-envelope"></i> Email</div>
+                                            <div class="col-1 text-center">:</div>
+                                            <div class="col-7 text-start" id="profile-email">Email</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4 text-start"><i class="fas fa-phone"></i> Phone</div>
+                                            <div class="col-1 text-center">:</div>
+                                            <div class="col-7 text-start" id="profile-phone">Phone Number</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4 text-start"><i class="fas fa-map-marker-alt"></i> Address</div>
+                                            <div class="col-1 text-center">:</div>
+                                            <div class="col-7 text-start" id="profile-address">Address</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4 text-start"><i class="fas fa-calendar"></i> Date of Birth</div>
+                                            <div class="col-1 text-center">:</div>
+                                            <div class="col-7 text-start" id="profile-dob">Date of Birth</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4 text-start"><i class="fas fa-venus-mars"></i>Gender</div>
+                                            <div class="col-1 text-center">:</div>
+                                            <div class="col-7 text-start" id="profile-gender">Gender</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4 text-start"><i class="fas fa-graduation-cap"></i>Highest Education</div>
+                                            <div class="col-1 text-center">:</div>
+                                            <div class="col-7 text-start" id="profile-education">Highest Education</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-------------------------Chapters------------------------------>
+                        <div id="chapter-1" class="content-section d-none">
+                            <div class="dashboard-header text-center">
+                                <h2>Chapter - 1 : Introduction to Sterile Processing</h2>
+                            </div>
+                        </div>
+
+                        <div id="chapter-2" class="content-section d-none">
+                            <div class="dashboard-header text-center">
+                                <h2>Chapter - 2 : Medical Terminology</h2>
+                            </div>
+                        </div>
+
+                        <div id="chapter-3" class="content-section d-none">
+                            <div class="dashboard-header text-center">
+                                <h2>Chapter - 3 : Anatomy and Physiology</h2>
+                            </div>
+                        </div>
+
+                        <div id="chapter-4" class="content-section d-none">
+                            <div class="dashboard-header text-center">
+                                <h2>Chapter - 4 : Microbiology</h2>
+                            </div>
+                        </div>
+
+                        <div id="chapter-5" class="content-section d-none">
+                            <div class="dashboard-header text-center">
+                                <h2>chapter-5 : Infection Control</h2>
+                            </div>
+                        </div>
+
+                        <div id="chapter-6" class="content-section d-none">
+                            <div class="dashboard-header text-center">
+                                <h2>Chapter - 6 : Regulations and Standards</h2>
+                            </div>
+                        </div>
+
+                        <div id="chapter-7" class="content-section d-none">
+                            <div class="dashboard-header text-center">
+                                <h2>Chapter - 7 : Point of Use Preparation and Transport</h2>
+                            </div>
+                        </div>
+
+                        <div id="chapter-8" class="content-section d-none">
+                            <div class="dashboard-header text-center">
+                                <h2>Chapter - 8 : Decontamination(cleaning)</h2>
+                            </div>
+                        </div>
+
+                        <div id="chapter-9" class="content-section d-none">
+                            <div class="dashboard-header text-center">
+                                <h2>Chapter - 9 : Disinfection</h2>
+                            </div>
+                        </div>
+
+                        <div id="chapter-10" class="content-section d-none">
+                            <div class="dashboard-header text-center">
+                                <h2>Chapter - 10 : Surgical Instrumentation</h2>
+                            </div>
+                        </div>
+
+                        <div id="chapter-11" class="content-section d-none">
+                            <div class="dashboard-header text-center">
+                                <h2>Chapter - 11 : Complex Surgical Instruments</h2>
+                            </div>
+                        </div>
+
+                        <!-------Other chapters will follow-->
+
+                        <!-------------------------Assignments------------------------------>
+                        <div id="assignments" class="content-section d-none">
+                            <div class="dashboard-header">
+                                <h2>Assignments</h2>
+                            </div>
+                        </div>
+
+                        <!-------------------------Tests & Quizzes------------------------------>
+                        <div id="tests" class="content-section d-none">
+                            <div class="dashboard-header">
+                                <h2>Tests & Quizzes</h2>
+                            </div>
+                        </div>
+
+                        <!-------------------------Announcements------------------------------>
+                        <div id="announcements" class="content-section d-none">
+                            <div class="dashboard-header">
+                                <h2>Announcements</h2>
+                            </div>
+                        </div>
+
+                        <!-------------------------Gradebook------------------------------>
+                        <div id="gradebook" class="content-section d-none">
+                            <div class="dashboard-header">
+                                <h2>Gradebook</h2>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="JS/student-course-dashboard.js"></script>
+</body>
+</html>

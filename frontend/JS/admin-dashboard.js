@@ -222,7 +222,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td>${index + 1}</td>
                 <td>${course.code}</td>
                 <td>${course.name}</td>
-                <td>${course.description}</td>
                 <td>${new Date(course.createdAt).toLocaleDateString()}</td>
                 <td>
                     <button class="btn btn-warning btn-sm edit-course" data-id="${course._id}" data-name="${course.name}" data-code="${course.code}"><i class="fas fa-edit"></i>Edit</button>
@@ -616,7 +615,45 @@ function deleteUser(userId) {
         })
         .catch(error => console.error("Error deleting user:", error));
 }
-loadUsers(); // Load users on page load
+
+//Add New Admin User
+document.getElementById("add-user-form").addEventListener("submit", function (event) {
+    event.preventDefault();
+    const firstName = document.getElementById("admin-first-name").value;
+    const lastName = document.getElementById("admin-last-name").value;
+    const email = document.getElementById("admin-email").value;
+    const position = document.getElementById("admin-position").value;
+    const contactNumber = document.getElementById("admin-contact").value;
+    const password = document.getElementById("admin-password").value;
+    const confirmPassword = document.getElementById("admin-confirm-password").value;
+
+    if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+    }
+
+    const adminData = {
+        firstName,
+        lastName,
+        email,
+        position,
+        contactNumber,
+        password
+    };
+
+    fetch("http://localhost:5000/api/users/add-admin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(adminData),
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        loadUsers();
+        })
+    .catch(error => console.error("Error adding admin:", error));
+    });
+
 
 ///////////////////////////////////////////Manage Students///////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", () => {
@@ -723,6 +760,16 @@ function deleteStudent(studentId) {
         })
         .catch(error => console.error("Error deleting student:", error));
 }
+
+// Function to Search Students
+document.getElementById("search-students").addEventListener("input", function () {
+    const searchValue = this.value.toLowerCase();
+    document.querySelectorAll("#students-table-body tr").forEach(row => {
+        const name = row.cells[2].textContent.toLowerCase();
+        row.style.display = name.includes(searchValue) ? "" : "none";
+    });
+});
+
 
 document.addEventListener("DOMContentLoaded", () => {
     loadDashboardMetrics();

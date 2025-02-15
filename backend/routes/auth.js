@@ -48,6 +48,12 @@ router.post("/login", async (req, res) => {
                 profilePicture: user.profilePicture,
                 contactNumber: user.contactNumber,
                 isActive: user.isActive,
+                address: user.address,
+                gender: user.gender,
+                dateOfBirth: user.dateOfBirth,
+                department: user.department,
+                emergencyContact: user.emergencyContact,
+                highestEducation: user.highestEducation,
             },
         });
     } catch (err) {
